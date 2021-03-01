@@ -3,7 +3,15 @@ WORKDIR /actions-runner
 
 ARG RUNNER_VERSION=2.277.1
 
-RUN apt update && apt -y upgrade && apt -y install curl
+RUN DEBIAN_FRONTEND=noninteractive apt update && \
+  DEBIAN_FRONTEND=noninteractive apt install -y \
+  curl \
+  inetutils-ping \
+  coreutils \
+  ca-certificates \
+  unattended-upgrades && \
+  apt-get autoremove -y && \
+  rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g 999 runner && useradd -r -u 999 -g runner runner
 RUN chown runner:runner /actions-runner
